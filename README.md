@@ -7,7 +7,12 @@ The full chain is **Secrets Manager → CloudTrail → CloudWatch Logs → Metri
 
 ## Overview
 
-**Goal:** Create a monitoring and alerting pipeline for secret access detection using AWS native services.  
+- Create and store a secret in AWS Secrets Manager.
+- Enable CloudTrail to log all secret access events.
+- Stream CloudTrail logs to CloudWatch Logs and build a metric filter.
+- Create a CloudWatch Alarm and SNS topic for email alerts.
+- (Secret Mission) Configure direct CloudTrail → SNS notifications and compare approaches.
+
 **Key Services Used:**
 
 - AWS CloudTrail
@@ -16,6 +21,66 @@ The full chain is **Secrets Manager → CloudTrail → CloudWatch Logs → Metri
 - AWS Secrets Manager
 
 ---
+
+## What This Project Covers
+
+Hands-on security lab to monitor and alert on access to sensitive secrets in AWS.
+
+- **Stage 1 – Secret & logging**: Create a secret in Secrets Manager, enable CloudTrail, and verify that `GetSecretValue` events are logged.
+- **Stage 2 – Monitoring & alerts**: Send CloudTrail logs to CloudWatch Logs, build a metric filter and alarm, wire it to SNS, then test and troubleshoot notifications.
+
+---
+
+## Why Monitor Secret Access
+
+Every access to a secret (API keys, passwords, confidential data) is a potential security event.
+
+This project shows how to:
+
+- Track _who_ accessed a secret, _when_, and _from where_ using CloudTrail.
+- Turn raw logs into actionable alerts via CloudWatch metrics, alarms, and SNS emails.
+
+---
+
+## 1. Project Setup & Secret Creation
+
+**Goal**: Create a secret that you will monitor.
+
+- Log in as IAM Admin, go to **Secrets Manager** → _Store a new secret_.
+- Secret type: **Other type of secret**.
+- Key: `The Secret is` → Value: any demo secret string.
+- Secret name: `TopSecretInfo`, description like `Secret created for monitoring project`.
+- Leave default KMS encryption and rotation disabled, then click **Store**.
+
+Result: A managed, encrypted secret ready to be monitored.
+
+---
+
+## 2. Enable CloudTrail & Generate Events
+
+**Goal**: Record and confirm secret access events.
+
+### Create CloudTrail trail
+
+- Go to **CloudTrail** → _Trails_ → **Create trail**.
+- Trail name: `secrets-manager-trail`.
+- Storage location: **Create new S3 bucket**, e.g. `nextwork-secrets-manager-trail-yourinitials`.
+- Uncheck **Log file SSE-KMS encryption** to avoid extra KMS costs.
+- Log events:
+  - Event type: **Management events**.
+  - API activity: **Read** and **Write**.
+  - Exclude AWS KMS events and RDS Data API events.
+- Create trail.
+
+### Generate secret access events
+
+- In **Secrets Manager**, open `TopSecretInfo` → **Retrieve secret value** (console).
+- Open **CloudShell** and run:
+  ```
+  aws secretsmanager get-secret-value --secret-id "TopSecretInfo" --region your-region-code
+  ```
+
+If this sends the email, SNS works fine; the problem lies with metrics or alarm configuration.
 
 ## 3. Send Logs to CloudWatch & Create Metric
 
