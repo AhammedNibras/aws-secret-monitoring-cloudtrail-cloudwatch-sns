@@ -13,6 +13,8 @@ The full chain is **Secrets Manager → CloudTrail → CloudWatch Logs → Metri
 - Create a CloudWatch Alarm and SNS topic for email alerts.
 - (Secret Mission) Configure direct CloudTrail → SNS notifications and compare approaches.
 
+![Image](http://learn.nextwork.org/overjoyed_silver_glamorous_cape_gooseberry/uploads/aws-security-monitoring_reghtjy)
+
 **Key Services Used:**
 
 - AWS CloudTrail
@@ -52,7 +54,9 @@ This project shows how to:
 - Secret name: `TopSecretInfo`, description like `Secret created for monitoring project`.
 - Leave default KMS encryption and rotation disabled, then click **Store**.
 
-Result: A managed, encrypted secret ready to be monitored.
+**Result**: A managed, encrypted secret ready to be monitored.
+
+![Image](http://learn.nextwork.org/overjoyed_silver_glamorous_cape_gooseberry/uploads/aws-security-monitoring_o5p6q7r8)
 
 ---
 
@@ -81,6 +85,8 @@ Result: A managed, encrypted secret ready to be monitored.
   ```
 
 If this sends the email, SNS works fine; the problem lies with metrics or alarm configuration.
+
+![Image](http://learn.nextwork.org/overjoyed_silver_glamorous_cape_gooseberry/uploads/aws-security-monitoring_s8t9u0v1)
 
 ## 3. Send Logs to CloudWatch & Create Metric
 
@@ -117,6 +123,8 @@ Turn **CloudTrail logs** into a **CloudWatch metric** to track when secrets are 
    - Review and create the metric filter.
 
 **Result:** Each `GetSecretValue` event increments a custom metric named **“Secret is accessed”** in the **SecurityMetrics** namespace.
+
+![Image](http://learn.nextwork.org/overjoyed_silver_glamorous_cape_gooseberry/uploads/aws-security-monitoring_a9b0c1d2)
 
 ---
 
@@ -156,6 +164,8 @@ Send an email alert whenever a secret is accessed.
 
 **Result:** Alarm is connected to the SNS topic, which is subscribed to your email address.
 
+![Image](http://learn.nextwork.org/overjoyed_silver_glamorous_cape_gooseberry/uploads/aws-security-monitoring_fsdghstt)
+
 ---
 
 ## 5. Test & Troubleshoot the Monitoring System
@@ -193,6 +203,8 @@ Retrieve the secret again and verify the alarm triggers.
 **Result:** Fully functional monitoring pipeline:
 Secrets Manager → CloudTrail → CloudWatch Logs → Metric Filter → Alarm → SNS email.
 
+![Image](http://learn.nextwork.org/overjoyed_silver_glamorous_cape_gooseberry/uploads/aws-security-monitoring_ageraergearge)
+
 ---
 
 ## Direct CloudTrail → SNS
@@ -209,6 +221,8 @@ Compare CloudWatch-based alerts vs direct CloudTrail SNS notifications.
 - Retrieve the secret again and check your inbox.
   **Note: You’ll receive frequent CloudTrail SNS emails for every log file delivery — not just secret access events.**
 - Disable SNS notification delivery after testing to stop the flood of messages.
+
+![Image](http://learn.nextwork.org/overjoyed_silver_glamorous_cape_gooseberry/uploads/aws-security-monitoring_d7e8f9g0)
 
 **Takeaway:**
 
